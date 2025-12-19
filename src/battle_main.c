@@ -460,6 +460,13 @@ void CB2_InitBattle(void)
     }
 }
 
+EWRAM_DATA struct Trainer gTrainerLeft;
+EWRAM_DATA u8 gTrainerLeftEVData[36];
+EWRAM_DATA u8 gTrainerLeftPokeNames[6][POKEMON_NAME_LENGTH + 1];
+EWRAM_DATA struct Trainer gTrainerRight;
+EWRAM_DATA u8 gTrainerRightEVData[36];
+EWRAM_DATA u8 gTrainerRightPokeNames[6][POKEMON_NAME_LENGTH + 1];
+EWRAM_DATA bool32 gTrainerInitDone;
 static void CB2_InitBattleInternal(void)
 {
     s32 i;
@@ -563,9 +570,14 @@ static void CB2_InitBattleInternal(void)
     {
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
         {
-            CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
-            if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
-                CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
+            memcpy(&gTrainerLeft, GetTrainerStructFromId(TRAINER_STEVEN), sizeof(struct Trainer));
+            memcpy(&gTrainerRight, GetTrainerStructFromId(TRAINER_WALLACE), sizeof(struct Trainer));
+            gTrainerInitDone = TRUE;
+            CreateNPCTrainerPartyFromTrainer(&gPlayerParty[0], &gTrainerLeft, TRUE, gBattleTypeFlags);
+            CreateNPCTrainerPartyFromTrainer(&gEnemyParty[0], &gTrainerRight, TRUE, gBattleTypeFlags);
+//            CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
+//            if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
+//                CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
             SetWildMonHeldItem();
             CalculateEnemyPartyCount();
         }

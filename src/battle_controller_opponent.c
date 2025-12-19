@@ -307,63 +307,10 @@ void OpponentBufferExecCompleted(u32 battler)
     }
 }
 
+EWRAM_DATA u32 gTrainerRightTrainerPicID = 0;
 static u32 OpponentGetTrainerPicId(u32 battlerId)
 {
-    u32 trainerPicId;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
-    {
-        trainerPicId = GetSecretBaseTrainerPicIndex();
-    }
-    else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
-    {
-        trainerPicId = GetFrontierBrainTrainerPicIndex();
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-        {
-            if (battlerId == 1)
-                trainerPicId = GetTrainerHillTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-            else
-                trainerPicId = GetTrainerHillTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
-        }
-        else
-        {
-            trainerPicId = GetTrainerHillTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-        }
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
-    {
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
-        {
-            if (battlerId == 1)
-                trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-            else
-                trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
-        }
-        else
-        {
-            trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-        }
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
-    {
-        trainerPicId = GetEreaderTrainerFrontSpriteId();
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-    {
-        if (battlerId != 1)
-            trainerPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentB);
-        else
-            trainerPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    }
-    else
-    {
-        trainerPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    }
-
-    return trainerPicId;
+    return gTrainerRightTrainerPicID;
 }
 
 static void OpponentHandleDrawTrainerPic(u32 battler)

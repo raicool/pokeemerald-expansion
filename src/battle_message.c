@@ -2484,52 +2484,7 @@ static void GetBattlerNick(u32 battler, u8 *dst)
 static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text, u8 multiplayerId, u8 battler)
 {
     const u8 *toCpy = NULL;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
-    {
-        u32 i;
-        for (i = 0; i < ARRAY_COUNT(gBattleResources->secretBase->trainerName); i++)
-            text[i] = gBattleResources->secretBase->trainerName[i];
-        text[i] = EOS;
-        ConvertInternationalString(text, gBattleResources->secretBase->language);
-        toCpy = text;
-    }
-    else if (trainerId == TRAINER_UNION_ROOM)
-    {
-        toCpy = gLinkPlayers[multiplayerId ^ BIT_SIDE].name;
-    }
-    else if (trainerId == TRAINER_LINK_OPPONENT)
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            toCpy = gLinkPlayers[GetBattlerMultiplayerId(battler)].name;
-        else
-            toCpy = gLinkPlayers[GetBattlerMultiplayerId(battler) & BIT_SIDE].name;
-    }
-    else if (trainerId == TRAINER_FRONTIER_BRAIN)
-    {
-        CopyFrontierBrainTrainerName(text);
-        toCpy = text;
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
-    {
-        GetFrontierTrainerName(text, trainerId);
-        toCpy = text;
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-    {
-        GetTrainerHillTrainerName(text, trainerId);
-        toCpy = text;
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
-    {
-        GetEreaderTrainerName(text);
-        toCpy = text;
-    }
-    else
-    {
-        toCpy = GetTrainerNameFromId(trainerId);
-    }
-
+    toCpy = gTrainerRight.trainerName;
     return toCpy;
 }
 
@@ -2540,13 +2495,10 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, u8 batt
     switch (GetBattlerPosition(battler))
     {
     case B_POSITION_OPPONENT_LEFT:
-        toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
+        toCpy = gTrainerLeft.trainerName;
         break;
     case B_POSITION_OPPONENT_RIGHT:
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !BATTLE_TWO_VS_ONE_OPPONENT)
-            toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentB, text, multiplayerId, battler);
-        else
-            toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
+        toCpy = gTrainerRight.trainerName;
         break;
     }
 
@@ -2563,7 +2515,7 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
             toCpy = gLinkPlayers[0].name;
         else
-            toCpy = gSaveBlock2Ptr->playerName;
+            toCpy = gTrainerLeft.trainerName;
         break;
     case B_POSITION_PLAYER_RIGHT:
         if (((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)))
@@ -2582,7 +2534,7 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
         }
         else
         {
-            toCpy = gSaveBlock2Ptr->playerName;
+            toCpy = gTrainerRight.trainerName;
         }
         break;
     }
@@ -2593,31 +2545,14 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
 static const u8 *BattleStringGetTrainerName(u8 *text, u8 multiplayerId, u8 battler)
 {
     if (IsOnPlayerSide(battler))
-        return BattleStringGetPlayerName(text, battler);
+        return gTrainerLeft.trainerName;
     else
-        return BattleStringGetOpponentName(text, multiplayerId, battler);
+        return gTrainerRight.trainerName;
 }
 
 static const u8 *BattleStringGetOpponentClassByTrainerId(u16 trainerId)
 {
-    const u8 *toCpy;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
-        toCpy = gTrainerClasses[GetSecretBaseTrainerClass()].name;
-    else if (trainerId == TRAINER_UNION_ROOM)
-        toCpy = gTrainerClasses[GetUnionRoomTrainerClass()].name;
-    else if (trainerId == TRAINER_FRONTIER_BRAIN)
-        toCpy = gTrainerClasses[GetFrontierBrainTrainerClass()].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
-        toCpy = gTrainerClasses[GetFrontierOpponentClass(trainerId)].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-        toCpy = gTrainerClasses[GetTrainerHillOpponentClass(trainerId)].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
-        toCpy = gTrainerClasses[GetEreaderTrainerClassId()].name;
-    else
-        toCpy = gTrainerClasses[GetTrainerClassFromId(trainerId)].name;
-
-    return toCpy;
+    return gTrainerClasses[gTrainerRight.trainerClass].name;
 }
 
 // Ensure the defined length for an item name can contain the full defined length of a berry name.

@@ -407,9 +407,19 @@ static void DoBattlePikeWildBattle(void)
     TryUpdateGymLeaderRematchFromWild();
 }
 
+EWRAM_DATA u16 gBattleMusic = 0; 
+EWRAM_DATA u16 gBattleTransition = 0; 
+EWRAM_DATA bool32 gBattleSettingsInitDone = 0; 
 static void DoTrainerBattle(void)
 {
-    CreateBattleStartTask(GetTrainerBattleTransition(), 0);
+    FlagSet(B_FLAG_AI_VS_AI_BATTLE);
+    gBattleSettingsInitDone = TRUE;
+    if (gBattleMusic == MUS_DUMMY)
+    {
+        gBattleMusic = MUS_VS_KYOGRE_GROUDON; 
+        gBattleTransition = B_TRANSITION_POKEBALLS_TRAIL;
+    }
+    CreateBattleStartTask(gBattleTransition, gBattleMusic);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
     TryUpdateGymLeaderRematchFromTrainer();

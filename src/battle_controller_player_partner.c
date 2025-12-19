@@ -220,7 +220,8 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
     }
     else if (IsAiVsAiBattle())
     {
-        trainerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+        extern u32 gTrainerLeftTrainerBackPicID;
+        trainerPicId = gTrainerLeftTrainerBackPicID;
         xPos = 60;
         yPos = 80;
     }
@@ -231,13 +232,7 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
         yPos = 80;
     }
 
-    // Use back pic only if the partner Steven or is custom.
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-        isFrontPic = FALSE;
-    else
-        isFrontPic = TRUE;
-
-    BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
+    BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, xPos, yPos, -1);
 }
 
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler)

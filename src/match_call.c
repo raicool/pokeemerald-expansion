@@ -1722,7 +1722,8 @@ static void PopulateTrainerName(int matchCallId, u8 *destStr)
         }
     }
 
-    StringCopy(destStr, GetTrainerNameFromId(trainerId));
+    extern struct Trainer gTrainerRight;
+    StringCopy(destStr, gTrainerRight.trainerName);
 }
 
 static void PopulateMapName(int matchCallId, u8 *destStr)

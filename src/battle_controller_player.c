@@ -1852,16 +1852,10 @@ u32 LinkPlayerGetTrainerPicId(u32 multiplayerId)
     return trainerPicId;
 }
 
+EWRAM_DATA u32 gTrainerLeftTrainerBackPicID = 0;
 static u32 PlayerGetTrainerBackPicId(void)
 {
-    u32 trainerPicId;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
-    else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
-
-    return trainerPicId;
+    return gTrainerLeftTrainerBackPicID;
 }
 
 // In emerald it's possible to have a tag battle in the battle frontier facilities with AI

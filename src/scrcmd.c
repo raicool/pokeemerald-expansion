@@ -3010,7 +3010,8 @@ bool8 ScrCmd_buffertrainerclassname(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    StringCopy(sScriptStringVars[stringVarIndex], GetTrainerClassNameFromId(trainerClassId));
+    extern struct Trainer gTrainerRight;
+    StringCopy(sScriptStringVars[stringVarIndex], gTrainerClasses[gTrainerRight.trainerClass].name);
     return FALSE;
 }
 

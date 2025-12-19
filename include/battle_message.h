@@ -337,4 +337,13 @@ extern const u16 gMissStringIds[];
 extern const u16 gStatUpStringIds[];
 extern const u16 gStatDownStringIds[];
 
+
+extern struct Trainer gTrainerLeft;
+extern u8 gTrainerLeftEVData[36];
+extern u8 gTrainerLeftPokeNames[6][POKEMON_NAME_LENGTH + 1];
+extern struct Trainer gTrainerRight;
+extern u8 gTrainerRightEVData[36];
+extern u8 gTrainerRightPokeNames[6][POKEMON_NAME_LENGTH + 1];
+extern bool32 gTrainerInitDone;
+
 #endif // GUARD_BATTLE_MESSAGE_H
